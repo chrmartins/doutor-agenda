@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-//import { useAction } from "next-safe-action/hooks";
+import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
-//import { NumericFormat } from "react-number-format";
+import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
-//import { upsertDoctor } from "@/actions/upsert-doctor";
+import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/select";
 import { doctorsTable } from "@/db/schema";
 
-//import { medicalSpecialties } from "../_constants";
+import { medicalSpecialties } from "../_constants";
 
 const formSchema = z
   .object({
@@ -88,24 +88,25 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
       availableToTime: doctor?.availableToTime ?? "",
     },
   });
-//   const upsertDoctorAction = useAction(upsertDoctor, {
-//     onSuccess: () => {
-//       toast.success("Médico adicionado com sucesso.");
-//       onSuccess?.();
-//     },
-//     onError: () => {
-//       toast.error("Erro ao adicionar médico.");
-//     },
-//   });
+
+  const upsertDoctorAction = useAction(upsertDoctor, {
+    onSuccess: () => {
+      toast.success("Médico adicionado com sucesso.");
+      onSuccess?.();
+    },
+    onError: () => {
+      toast.error("Erro ao adicionar médico.");
+    },
+  });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // upsertDoctorAction.execute({
-    //   ...values,
-    //   id: doctor?.id,
-    //   availableFromWeekDay: parseInt(values.availableFromWeekDay),
-    //   availableToWeekDay: parseInt(values.availableToWeekDay),
-    //   appointmentPriceInCents: values.appointmentPrice * 100,
-    // });
+    upsertDoctorAction.execute({
+      ...values,
+      id: doctor?.id,
+      availableFromWeekDay: parseInt(values.availableFromWeekDay),
+      availableToWeekDay: parseInt(values.availableToWeekDay),
+      appointmentPriceInCents: values.appointmentPrice * 100,
+    });
   };
 
   return (
@@ -149,11 +150,11 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {/* {medicalSpecialties.map((specialty) => (
+                    {medicalSpecialties.map((specialty) => (
                       <SelectItem key={specialty.value} value={specialty.value}>
                         {specialty.label}
                       </SelectItem>
-                    ))} */}
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -166,11 +167,11 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Preço da consulta</FormLabel>
-                {/* <NumericFormat
+                <NumericFormat
                   value={field.value}
-                //   onValueChange={(value) => {
-                //     field.onChange(value.floatValue);
-                //   }}
+                  onValueChange={(value) => {
+                    field.onChange(value.floatValue);
+                  }}
                   decimalScale={2}
                   fixedDecimalScale
                   decimalSeparator=","
@@ -179,7 +180,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
                   thousandSeparator="."
                   customInput={Input}
                   prefix="R$"
-                /> */}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -381,13 +382,13 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             )}
           />
           <DialogFooter>
-            {/* <Button type="submit" disabled={upsertDoctorAction.isPending}>
+            <Button type="submit" disabled={upsertDoctorAction.isPending}>
               {upsertDoctorAction.isPending
                 ? "Salvando..."
                 : doctor
                   ? "Salvar"
                   : "Adicionar"}
-            </Button> */}
+            </Button>
           </DialogFooter>
         </form>
       </Form>
