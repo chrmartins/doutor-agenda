@@ -1,4 +1,4 @@
-"use client";  
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import ButtonGoogle from "./button-google";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -68,6 +69,15 @@ const LoginForm = () => {
       toast.error("Erro inesperado. Tente novamente.");
     }
   }
+
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+      scopes: ["email", "profile"],
+    });
+  };
+
   return (
     <Card>
       <Form {...form}>
@@ -110,17 +120,20 @@ const LoginForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                "Entrar"
-              )}
-            </Button>
+            <div className="w-full space-y-2">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Entrar"
+                )}
+              </Button>
+              <ButtonGoogle handleGoogleLogin={handleGoogleLogin} />
+            </div>
           </CardFooter>
         </form>
       </Form>
