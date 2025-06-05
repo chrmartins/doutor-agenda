@@ -6,7 +6,7 @@ import { patientsTable } from "@/db/schema";
 
 import PatientsTableActions from "./table-actions";
 
-type Patient = typeof patientsTable.$inferSelect;
+type Patient = typeof patientsTable.$inferSelect; //utilitário do Drizzle para tipagem
 
 export const patientsTableColumns: ColumnDef<Patient>[] = [
   {
